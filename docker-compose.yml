@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  caddy:
+    build:
+      context: .
+      dockerfile: Dockerfile.caddy
+    network_mode: "host"
+    volumes:
+    - .:/var/www/html/public
+    - ./docker/etc/caddy/Caddyfile:/etc/caddy/Caddyfile
+    - ./docker-compose.d/caddy/certs:/certs
+    environment:
+      SITE_ADDRESS: hawki.forge.rz.unibw-muenchen.de
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile.php
+    network_mode: "host"
+    volumes:
+    - .:/var/www/html/public
