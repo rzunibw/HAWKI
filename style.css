@@ -54,8 +54,7 @@ aside{
 
 /* Size of logo on login page */
 img{
-  width: 120px;
-/* width: 100%; */
+  width: 100%;
   margin: 2rem auto;
 }
 
