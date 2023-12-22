@@ -27,7 +27,7 @@
 
 	# Enable the static file server.
 	file_server {
-		hide .env
+		hide .env vendor
 	}
 
 	encode zstd gzip
