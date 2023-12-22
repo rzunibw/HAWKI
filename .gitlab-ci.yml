@@ -1,0 +1,31 @@
+# https://quay.io/repository/containers/buildah
+# https://github.com/containers/buildah/blob/main/CHANGELOG.md
+image:
+  name: quay.io/containers/buildah:v1.33.2
+
+before_script:
+- buildah login --username "${CI_REGISTRY_USER}" --password "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
+- export TODAY=$(date +%Y-%m-%d)
+
+
+build:
+  stage: build
+  variables:
+    IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}
+  script:
+  # build caddy
+  - buildah build --file Dockerfile.caddy --pull --tag "${IMAGE}-caddy"
+  # build fpm
+  - buildah build --file Dockerfile.php --pull --tag "${IMAGE}-php"
+  # tag
+  - buildah tag "${IMAGE}-caddy" "${IMAGE}-caddy-${TODAY}"
+  - buildah tag "${IMAGE}-php" "${IMAGE}-php-${TODAY}"
+  # push
+  - buildah push "${IMAGE}-caddy-${TODAY}"
+  - buildah push "${IMAGE}-php-${TODAY}"
+  - buildah push "${IMAGE}-caddy"
+  - buildah push "${IMAGE}-php"
+  only:
+    refs:
+    - schedules
+    - tags
